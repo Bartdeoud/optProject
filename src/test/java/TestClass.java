@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 
 //this class test the most important functions
+//test databases are in the folder test
 public class TestClass
 {
     Symbol testSymbool = new Symbol("SymbolenVerzamelBestand", "Folder1", "Symbool1");
