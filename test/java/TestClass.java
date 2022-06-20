@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -10,6 +11,7 @@ import static org.junit.Assert.*;
 //test databases are in the folder test
 public class TestClass
 {
+    String localPath = new File("").getAbsolutePath();
     Symbol testSymbool = new Symbol("SymbolenVerzamelBestand", "Folder1", "Symbool1");
     Symbol testSymbool3d = new Symbol("Test", "Tekst\\Kast\\Relais", "ConnectionsWrong");
     ArrayList<Folder> testFolders = new ArrayList<>(Arrays.asList(
