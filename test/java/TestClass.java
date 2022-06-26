@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 //test databases are in the folder test
 public class TestClass
 {
-    String localPath = new File("").getAbsolutePath();
+    String localPath = new File("").getAbsolutePath() + "\\test\\databases";
     Symbol testSymbool = new Symbol("SymbolenVerzamelBestand", "Folder1", "Symbool1");
     Symbol testSymbool3d = new Symbol("Test", "Tekst\\Kast\\Relais", "ConnectionsWrong");
     ArrayList<Folder> testFolders = new ArrayList<>(Arrays.asList(
@@ -24,7 +24,7 @@ public class TestClass
     //tests if the function gets the right folders
     @Test
     public void getFolderSESTest(){
-        ArrayList<Folder> folders = FormMain.getFolderSES("D:\\test\\Test.ses3d", true);
+        ArrayList<Folder> folders = FormMain.getFolderSES(localPath + "\\Test.ses3d", true);
 
         for(int i = 0; i < folders.size(); i++){
             Folder testfolder = testFolders.get(i);
@@ -38,9 +38,9 @@ public class TestClass
     //test if functions gets the right 2d symbols from the database
     @Test
     public void getSymbolsTest2d(){
-        GetSymbols2d getSymbols2d = new GetSymbols2d("D:\\test");
+        GetSymbols2d getSymbols2d = new GetSymbols2d(localPath);
 
-        ArrayList<Symbol> symbols = getSymbols2d.getSymbols("SymbolenVerzamelBestand", "D:\\test\\SymbolenVerzamelBestand.ses", FormMain.getFolderSES("D:\\test\\SymbolenVerzamelBestand.ses", false));
+        ArrayList<Symbol> symbols = getSymbols2d.getSymbols("SymbolenVerzamelBestand", localPath + "\\SymbolenVerzamelBestand.ses", FormMain.getFolderSES(localPath + "\\SymbolenVerzamelBestand.ses", false));
 
         assertEquals(1, symbols.size());
         assertEquals(symbols.get(0).getFileSES(), testSymbool.getFileSES());
@@ -51,11 +51,11 @@ public class TestClass
     //test if functions gets the right 3d symbols from the database
     @Test
     public void getSymbolsTest3d(){
-        GetSymbols3d getSymbols3d = new GetSymbols3d("D:\\test");
+        GetSymbols3d getSymbols3d = new GetSymbols3d(localPath);
 
-        ArrayList<Folder> folders = FormMain.getFolderSES("D:\\test\\Test.ses3d", true);
+        ArrayList<Folder> folders = FormMain.getFolderSES(localPath + "\\Test.ses3d", true);
 
-        ArrayList<Symbol> symbols = getSymbols3d.getSymbolsSES3d("Test", "D:\\test\\Test.ses3d", folders);
+        ArrayList<Symbol> symbols = getSymbols3d.getSymbols("Test", localPath + "\\Test.ses3d", folders);
 
         assertEquals(symbols.get(4).getFileSES(), testSymbool3d.getFileSES());
         assertEquals(symbols.get(4).getSymboolName(), testSymbool3d.getSymboolName());

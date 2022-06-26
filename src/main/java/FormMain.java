@@ -164,7 +164,7 @@ public class FormMain
     //creates an error message and stores saves message to a file
     public static void errorHandler(Exception e, String message){
         JOptionPane.showMessageDialog(null,String.format("%s\n%s", message, e));
-        File file = new File( path + "\\log.txt");
+        File file = getfile( "\\log.txt");
         try{
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
@@ -178,6 +178,14 @@ public class FormMain
             ioException.printStackTrace();
             JOptionPane.showMessageDialog(null,String.format("Warning : errorHandler not working!!\n%s", e));
         }
+    }
+
+    public static File getfile(String path){
+        String localPath = new File("").getPath();
+        File file = new File(localPath + path);
+        if(!file.exists()) file.mkdirs();
+
+        return file;
     }
 
     public static void main(String[] args)
