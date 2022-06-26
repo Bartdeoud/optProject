@@ -1,3 +1,7 @@
+import Beans.Folder;
+import Beans.Symbol;
+import SESFileReader.GetSymbols2d;
+import SESFileReader.GetSymbols3d;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;

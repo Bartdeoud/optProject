@@ -1,3 +1,7 @@
+import Beans.Folder;
+import Beans.Symbol;
+import SESFileReader.GetSymbols2d;
+import SESFileReader.GetSymbols3d;
 import org.junit.Test;
 
 import java.io.File;

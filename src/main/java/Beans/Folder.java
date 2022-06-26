@@ -1,3 +1,5 @@
+package Beans;
+
 import java.util.ArrayList;
 
 public class Folder

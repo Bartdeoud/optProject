@@ -1,43 +1,60 @@
+package SESFileReader;
+
+import Beans.Folder;
+import Beans.Symbol;
+
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 
-class GetSymbols3d extends SESFileReader implements SESfunctions {
+import static SESFileReader.GetSymbols2d.validate;
+
+public class GetSymbols3d extends SESFileReader implements SESFunctions
+{
 
     private final ArrayList<File> files3d = new ArrayList<>();
 
-    public ArrayList<File> getFiles(){
+    public ArrayList<File> getFiles()
+    {
         return files3d;
     }
 
     public GetSymbols3d(String path)
     {
         super(path);
-        for (File file : files)
+        try
         {
-            String fileName = file.getName();
-            try
+            for (File file : files)
             {
-                if (fileName.length() >= 6)
-                {
-                    if (fileName.substring((fileName.length() - 6)).equals(".ses3d"))
+                String fileName = file.getName();
+                    if (fileName.length() >= 6)
                     {
-                        files3d.add(file);
+                        if (fileName.substring((fileName.length() - 6)).equals(".ses3d"))
+                        {
+                            files3d.add(file);
+                        }
                     }
-                }
-            } catch (Exception e)
-            {
-                e.printStackTrace();
             }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
     @Override
     public ArrayList<Symbol> getSymbols(String fileSES, String location, ArrayList<Folder> folders)
     {
-        ArrayList<Symbol> symbols = new ArrayList<>();
         //connect to SES database
         String databaseURL = "jdbc:ucanaccess://" + location;
+
+        folders = getGroupCounterFromDatabase(databaseURL,folders);
+
+        ArrayList<Symbol> symbols = getSymbolsFromDatabase(databaseURL, folders, fileSES);
+
+        return validate(symbols);
+    }
+
+    public ArrayList<Folder> getGroupCounterFromDatabase(String databaseURL, ArrayList<Folder> folders){
         try
         {
             Connection connection = DriverManager.getConnection(databaseURL);
@@ -59,43 +76,42 @@ class GetSymbols3d extends SESFileReader implements SESfunctions {
         {
             e.printStackTrace();
         }
+        return folders;
+    }
+
+    public ArrayList<Symbol> getSymbolsFromDatabase(String databaseURL, ArrayList<Folder> folders, String fileSES){
+        ArrayList<Symbol> returnSymbols = new ArrayList<>();
         try
         {
             Connection connection = DriverManager.getConnection(databaseURL);
             Statement statement1 = connection.createStatement();
             String query1 = "SELECT * FROM [Group]";
             //for each folder -> get symbols
-            String symbolName;
             for (Folder folder : folders)
             {
                 for (int groupcounter : folder.getGroupCounter())
                 {
                     ResultSet rs = statement1.executeQuery(query1);
-                    while (rs.next())
-                    {
-                        if (groupcounter == rs.getInt("Counter"))
-                        {
-                            symbolName = rs.getString("GroupName");
-                            symbols.add(new Symbol(fileSES, folder.getFolderFullPath(), symbolName));
-                        }
-                    }
+                    returnSymbols.addAll(addSymbols(rs,groupcounter,folder,fileSES));
                 }
             }
         } catch (SQLException throwables)
         {
             throwables.printStackTrace();
         }
-        return validate(symbols);
+        return returnSymbols;
     }
 
-    public static ArrayList<Symbol> validate(ArrayList<Symbol> symbols)
+    public ArrayList<Symbol> addSymbols(ResultSet rs, int groupcounter, Folder folder, String fileSES) throws SQLException
     {
         ArrayList<Symbol> returnSymbols = new ArrayList<>();
-        for (Symbol symbol : symbols)
+        while (rs.next())
         {
-            if (!symbol.getSymboolName().contains("\"") & !symbol.getSymboolName().contains("#") & !symbol.getSymboolName().contains("\\") & !symbol.getSymboolName().contains(";"))
-                returnSymbols.add(symbol);
+            if (groupcounter == rs.getInt("Counter"))
+            {
+                returnSymbols.add(new Symbol(fileSES,  folder.getFolderFullPath(), rs.getString("GroupName")));
+            }
         }
-        return returnSymbols;
+        return  returnSymbols;
     }
 }

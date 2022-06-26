@@ -1,3 +1,5 @@
+package Beans;
+
 public class Symbol
 {
     private final String folderName;
