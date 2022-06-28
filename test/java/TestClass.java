@@ -28,7 +28,7 @@ public class TestClass
     //tests if the function gets the right folders
     @Test
     public void getFolderSESTest(){
-        ArrayList<Folder> folders = FormMain.getFolderSES(localPath + "\\Test.ses3d", true);
+        ArrayList<Folder> folders = GetFolderSES.getFolderSES(localPath + "\\Test.ses3d");
 
         for(int i = 0; i < folders.size(); i++){
             Folder testfolder = testFolders.get(i);
@@ -44,11 +44,11 @@ public class TestClass
     public void getSymbolsTest2d(){
         GetSymbols2d getSymbols2d = new GetSymbols2d(localPath);
 
-        ArrayList<Symbol> symbols = getSymbols2d.getSymbols("SymbolenVerzamelBestand", localPath + "\\SymbolenVerzamelBestand.ses", FormMain.getFolderSES(localPath + "\\SymbolenVerzamelBestand.ses", false));
+        ArrayList<Symbol> symbols = getSymbols2d.getSymbols("SymbolenVerzamelBestand", localPath + "\\SymbolenVerzamelBestand.ses", GetFolderSES.getFolderSES(localPath + "\\SymbolenVerzamelBestand.ses"));
 
         assertEquals(1, symbols.size());
         assertEquals(symbols.get(0).getFileSES(), testSymbool.getFileSES());
-        assertEquals(symbols.get(0).getSymboolName(), testSymbool.getSymboolName());
+        assertEquals(symbols.get(0).getSymbolName(), testSymbool.getSymbolName());
         assertEquals(symbols.get(0).getFolderName(), testSymbool.getFolderName());
     }
 
@@ -57,12 +57,11 @@ public class TestClass
     public void getSymbolsTest3d(){
         GetSymbols3d getSymbols3d = new GetSymbols3d(localPath);
 
-        ArrayList<Folder> folders = FormMain.getFolderSES(localPath + "\\Test.ses3d", true);
+        ArrayList<Folder> folders = GetFolderSES.getFolderSES(localPath + "\\Test.ses3d");
 
-        ArrayList<Symbol> symbols = getSymbols3d.getSymbols("Test", localPath + "\\Test.ses3d", folders);
+        ArrayList<Symbol> symbols = getSymbols3d.getSymbols("Test.ses3d", localPath + "\\Test.ses3d", folders);
 
-        assertEquals(symbols.get(4).getFileSES(), testSymbool3d.getFileSES());
-        assertEquals(symbols.get(4).getSymboolName(), testSymbool3d.getSymboolName());
+        assertEquals(symbols.get(4).getSymbolName(), testSymbool3d.getSymbolName());
         assertEquals(symbols.get(4).getFolderName(), testSymbool3d.getFolderName());
     }
 }

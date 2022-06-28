@@ -6,14 +6,14 @@ import Beans.Symbol;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import static SESFileReader.GetSymbols2d.validate;
-
-public class GetSymbols3d extends SESFileReader implements SESFunctions
+public class GetSymbols3d extends SESFileReader
 {
 
     private final ArrayList<File> files3d = new ArrayList<>();
 
+    @Override
     public ArrayList<File> getFiles()
     {
         return files3d;
@@ -29,7 +29,7 @@ public class GetSymbols3d extends SESFileReader implements SESFunctions
                 String fileName = file.getName();
                     if (fileName.length() >= 6)
                     {
-                        if (fileName.substring((fileName.length() - 6)).equals(".ses3d"))
+                        if (fileName.endsWith(".ses3d"))
                         {
                             files3d.add(file);
                         }
@@ -49,12 +49,14 @@ public class GetSymbols3d extends SESFileReader implements SESFunctions
 
         folders = getGroupCounterFromDatabase(databaseURL,folders);
 
-        ArrayList<Symbol> symbols = getSymbolsFromDatabase(databaseURL, folders, fileSES);
+        ArrayList<Symbol> returnSymbols = new ArrayList<>();
+
+        ArrayList<Symbol> symbols = getSymbolsFromDatabase(databaseURL, folders, fileSES, returnSymbols);
 
         return validate(symbols);
     }
 
-    public ArrayList<Folder> getGroupCounterFromDatabase(String databaseURL, ArrayList<Folder> folders){
+    private ArrayList<Folder> getGroupCounterFromDatabase(String databaseURL, ArrayList<Folder> folders){
         try
         {
             Connection connection = DriverManager.getConnection(databaseURL);
@@ -79,8 +81,8 @@ public class GetSymbols3d extends SESFileReader implements SESFunctions
         return folders;
     }
 
-    public ArrayList<Symbol> getSymbolsFromDatabase(String databaseURL, ArrayList<Folder> folders, String fileSES){
-        ArrayList<Symbol> returnSymbols = new ArrayList<>();
+    private ArrayList<Symbol> getSymbolsFromDatabase(String databaseURL, ArrayList<Folder> folders, String fileSES, ArrayList<Symbol> returnSymbols){
+        if(!validated(databaseURL, folders, fileSES, returnSymbols)) return returnSymbols;
         try
         {
             Connection connection = DriverManager.getConnection(databaseURL);
@@ -95,14 +97,21 @@ public class GetSymbols3d extends SESFileReader implements SESFunctions
                     returnSymbols.addAll(addSymbols(rs,groupcounter,folder,fileSES));
                 }
             }
-        } catch (SQLException throwables)
+        } catch (SQLException throwable)
         {
-            throwables.printStackTrace();
+            throwable.printStackTrace();
         }
         return returnSymbols;
     }
 
-    public ArrayList<Symbol> addSymbols(ResultSet rs, int groupcounter, Folder folder, String fileSES) throws SQLException
+    public static boolean validated(String databaseURL, ArrayList<Folder> folders, String fileSES, ArrayList<Symbol> symbols){
+        if(databaseURL.equals("jdbc:ucanaccess://")) return false;
+        if(folders.size() == 0) return false;
+        if(symbols.size() > 0) return false;
+        return fileSES.endsWith(".ses3d") || fileSES.endsWith(".ses") || fileSES.endsWith(".SeeAble");
+    }
+
+    private ArrayList<Symbol> addSymbols(ResultSet rs, int groupcounter, Folder folder, String fileSES) throws SQLException
     {
         ArrayList<Symbol> returnSymbols = new ArrayList<>();
         while (rs.next())
@@ -112,6 +121,6 @@ public class GetSymbols3d extends SESFileReader implements SESFunctions
                 returnSymbols.add(new Symbol(fileSES,  folder.getFolderFullPath(), rs.getString("GroupName")));
             }
         }
-        return  returnSymbols;
+    return  returnSymbols;
     }
 }

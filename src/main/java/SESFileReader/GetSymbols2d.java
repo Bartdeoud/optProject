@@ -7,11 +7,12 @@ import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class GetSymbols2d extends SESFileReader implements SESFunctions
+public class GetSymbols2d extends SESFileReader
 {
 
     private final ArrayList<File> files2d = new ArrayList<>();
 
+    @Override
     public ArrayList<File> getFiles()
     {
         return files2d;
@@ -27,7 +28,7 @@ public class GetSymbols2d extends SESFileReader implements SESFunctions
                 String fileName = file.getName();
                 try
                 {
-                    if (fileName.substring((fileName.length() - 4)).equals(".ses"))
+                    if (fileName.endsWith(".ses"))
                     {
                         files2d.add(file);
                     }
@@ -46,11 +47,9 @@ public class GetSymbols2d extends SESFileReader implements SESFunctions
     public ArrayList<Symbol> getSymbols(String fileSES, String location, ArrayList<Folder> folders)
     {
         ArrayList<Symbol> symbols = new ArrayList<>();
-        //connect to SES database
-        String databaseURL = "jdbc:ucanaccess://" + location;
         try
         {
-            Connection connection = DriverManager.getConnection(databaseURL);
+            Connection connection = DriverManager.getConnection("jdbc:ucanaccess://" + location);
             Statement statement = connection.createStatement();
             String query = "SELECT * FROM [Group]";
             //foreach folder get symbols
@@ -73,16 +72,5 @@ public class GetSymbols2d extends SESFileReader implements SESFunctions
             e.printStackTrace();
         }
         return validate(symbols);
-    }
-
-    public static ArrayList<Symbol> validate(ArrayList<Symbol> symbols)
-    {
-        ArrayList<Symbol> returnSymbols = new ArrayList<>();
-        for (Symbol symbol : symbols)
-        {
-            if (!symbol.getSymboolName().contains("\"") & !symbol.getSymboolName().contains("#") & !symbol.getSymboolName().contains("\\") & !symbol.getSymboolName().contains(";"))
-                returnSymbols.add(symbol);
-        }
-        return returnSymbols;
     }
 }

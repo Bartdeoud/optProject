@@ -2,14 +2,15 @@ package Beans;
 
 public class Symbol
 {
-    private final String folderName;
-    private final String symboolName;
     private final String fileSES;
+    private final String folderName;
+    private final String symbolName;
 
-    public Symbol(String fileSES, String folderName, String symboolName){
+    public Symbol(String fileSES, String folderName, String symbolName)
+    {
         this.fileSES = fileSES;
         this.folderName = folderName;
-        this.symboolName = symboolName;
+        this.symbolName = symbolName;
     }
 
     public String getFileSES()
@@ -17,9 +18,9 @@ public class Symbol
         return fileSES;
     }
 
-    public String getSymboolName()
+    public String getSymbolName()
     {
-        return symboolName;
+        return symbolName;
     }
 
     public String getFolderName()
