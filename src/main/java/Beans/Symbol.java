@@ -1,5 +1,9 @@
 package Beans;
 
+/*
+ * class om data van een symbol op te slaan.
+ */
+
 public class Symbol
 {
     private final String fileSES;

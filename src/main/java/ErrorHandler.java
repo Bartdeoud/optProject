@@ -3,6 +3,10 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/*
+ * class om error berichten op te slaan en weer te geven
+ */
+
 public class ErrorHandler
 {
 

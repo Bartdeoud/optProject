@@ -2,6 +2,10 @@ package Beans;
 
 import java.util.ArrayList;
 
+/*
+ * class om data van een map op te slaan
+ */
+
 public class Folder
 {
     private final int folderNumber;

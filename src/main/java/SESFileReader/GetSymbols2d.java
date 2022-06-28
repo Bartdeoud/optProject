@@ -7,6 +7,10 @@ import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 
+/*
+ * class om 2d symbolen te importeren
+ */
+
 public class GetSymbols2d extends SESFileReader
 {
 
@@ -18,6 +22,7 @@ public class GetSymbols2d extends SESFileReader
         return files2d;
     }
 
+    //filterd op 2d bestanden
     public GetSymbols2d(String path)
     {
         super(path);

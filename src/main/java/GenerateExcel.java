@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/*
+ * class om een excel bestand te maken van de geïmporteerde data
+ */
+
 public class GenerateExcel
 {
 

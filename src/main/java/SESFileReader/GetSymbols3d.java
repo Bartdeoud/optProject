@@ -6,7 +6,10 @@ import Beans.Symbol;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+/*
+ * class om 3d symbolen te importeren
+ */
 
 public class GetSymbols3d extends SESFileReader
 {
@@ -19,6 +22,7 @@ public class GetSymbols3d extends SESFileReader
         return files3d;
     }
 
+    //filterd op 3d bestanden
     public GetSymbols3d(String path)
     {
         super(path);
@@ -50,6 +54,7 @@ public class GetSymbols3d extends SESFileReader
         return validate(symbols);
     }
 
+    //returns een Counter uit de database
     private ArrayList<Folder> getGroupCounterFromDatabase(String databaseURL, ArrayList<Folder> folders){
         try
         {
@@ -65,6 +70,7 @@ public class GetSymbols3d extends SESFileReader
         return folders;
     }
 
+    //returns data van een database
     public ResultSet getResultSet(String databaseURL) throws SQLException{
         Connection connection = DriverManager.getConnection(databaseURL);
         Statement statement = connection.createStatement();
@@ -88,6 +94,7 @@ public class GetSymbols3d extends SESFileReader
         return returnSymbols;
     }
 
+    //controleerd of data later voor een error zorgd
     public static boolean validated(String databaseURL, ArrayList<Folder> folders, String fileSES, ArrayList<Symbol> symbols){
         if(databaseURL.equals("jdbc:ucanaccess://")) return false;
         if(folders.size() == 0) return false;

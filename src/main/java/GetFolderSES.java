@@ -3,6 +3,10 @@ import Beans.Folder;
 import java.sql.*;
 import java.util.ArrayList;
 
+/*
+ * class om mappen uit een database te halen
+ */
+
 public class GetFolderSES
 {
 
