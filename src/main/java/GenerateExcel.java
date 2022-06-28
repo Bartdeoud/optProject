@@ -77,14 +77,11 @@ public class GenerateExcel
         String date = dtf.format(now);
         // writing the workbook into exel file
         FileOutputStream out;
-        try
-        {
+        try {
             out = new FileOutputStream(path + "/SEEableSymbolDb" + date + ".xlsx");
             workbook.write(out);
             out.close();
-        } catch (IOException e)
-        {
-            ErrorHandler.getInstance().errorMessage(e, "Location : createXLS");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

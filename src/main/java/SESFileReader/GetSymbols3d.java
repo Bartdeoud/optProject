@@ -22,22 +22,16 @@ public class GetSymbols3d extends SESFileReader
     public GetSymbols3d(String path)
     {
         super(path);
-        try
+        for (File file : files)
         {
-            for (File file : files)
+            String fileName = file.getName();
+            if (fileName.length() >= 6)
             {
-                String fileName = file.getName();
-                    if (fileName.length() >= 6)
-                    {
-                        if (fileName.endsWith(".ses3d"))
-                        {
-                            files3d.add(file);
-                        }
-                    }
+                if (fileName.endsWith(".ses3d"))
+                {
+                    files3d.add(file);
+                }
             }
-        } catch (Exception e)
-        {
-            e.printStackTrace();
         }
     }
 
@@ -59,21 +53,11 @@ public class GetSymbols3d extends SESFileReader
     private ArrayList<Folder> getGroupCounterFromDatabase(String databaseURL, ArrayList<Folder> folders){
         try
         {
-            Connection connection = DriverManager.getConnection(databaseURL);
-            Statement statement = connection.createStatement();
-            String query = "SELECT * FROM [GroupFolder]";
+            ResultSet rs = getResultSet(databaseURL);
             for (Folder folder : folders)
-            {
-                ResultSet rs = statement.executeQuery(query);
                 while (rs.next())
-                {
-                    //puts query output in folder
                     if (folder.getFolderNumber() == rs.getInt("FolderCounter"))
-                    {
                         folders.get(folders.indexOf(folder)).addGroupCounter(rs.getInt("GroupCounter"));
-                    }
-                }
-            }
         } catch (SQLException e)
         {
             e.printStackTrace();
@@ -81,24 +65,24 @@ public class GetSymbols3d extends SESFileReader
         return folders;
     }
 
+    public ResultSet getResultSet(String databaseURL) throws SQLException{
+        Connection connection = DriverManager.getConnection(databaseURL);
+        Statement statement = connection.createStatement();
+        String query = "SELECT * FROM [GroupFolder]";
+        return statement.executeQuery(query);
+    }
+
+    //Get symbols for each folder
     private ArrayList<Symbol> getSymbolsFromDatabase(String databaseURL, ArrayList<Folder> folders, String fileSES, ArrayList<Symbol> returnSymbols){
         if(!validated(databaseURL, folders, fileSES, returnSymbols)) return returnSymbols;
-        try
-        {
-            Connection connection = DriverManager.getConnection(databaseURL);
-            Statement statement1 = connection.createStatement();
+        try {
             String query1 = "SELECT * FROM [Group]";
-            //for each folder -> get symbols
             for (Folder folder : folders)
-            {
-                for (int groupcounter : folder.getGroupCounter())
-                {
-                    ResultSet rs = statement1.executeQuery(query1);
-                    returnSymbols.addAll(addSymbols(rs,groupcounter,folder,fileSES));
+                for (int groupcounter : folder.getGroupCounter()) {
+                    ResultSet rs = DriverManager.getConnection(databaseURL).createStatement().executeQuery(query1);
+                    returnSymbols.addAll(addSymbols(rs, groupcounter, folder, fileSES));
                 }
-            }
-        } catch (SQLException throwable)
-        {
+        } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
         return returnSymbols;

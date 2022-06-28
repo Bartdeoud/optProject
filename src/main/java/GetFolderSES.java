@@ -36,7 +36,7 @@ public class GetFolderSES
             }
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            ErrorHandler.getInstance().errorMessage(e, "Location : createXLS");
         }
         return folders;
     }
@@ -57,7 +57,7 @@ public class GetFolderSES
             folderToAdd = new Folder(rs.getString("Folder"), folder3dPath, rs.getInt("Counter"));
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            ErrorHandler.getInstance().errorMessage(e, "Location : createXLS");
         }
         return folderToAdd;
     }
