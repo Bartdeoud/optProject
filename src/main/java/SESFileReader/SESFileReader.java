@@ -18,7 +18,7 @@ public abstract class SESFileReader
         }
     }
 
-    public abstract ArrayList<Symbol> getSymbols(String fileSES, String location, ArrayList<Folder> folders);
+    public abstract ArrayList<Symbol> getSymbols(String location, ArrayList<Folder> folders);
 
     public abstract ArrayList<File> getFiles();
 

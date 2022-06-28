@@ -36,7 +36,7 @@ public class GetSymbols3d extends SESFileReader
     }
 
     @Override
-    public ArrayList<Symbol> getSymbols(String fileSES, String location, ArrayList<Folder> folders)
+    public ArrayList<Symbol> getSymbols(String location, ArrayList<Folder> folders)
     {
         //connect to SES database
         String databaseURL = "jdbc:ucanaccess://" + location;
@@ -45,7 +45,7 @@ public class GetSymbols3d extends SESFileReader
 
         ArrayList<Symbol> returnSymbols = new ArrayList<>();
 
-        ArrayList<Symbol> symbols = getSymbolsFromDatabase(databaseURL, folders, fileSES, returnSymbols);
+        ArrayList<Symbol> symbols = getSymbolsFromDatabase(databaseURL, folders, location.substring(location.lastIndexOf("\\") + 1), returnSymbols);
 
         return validate(symbols);
     }

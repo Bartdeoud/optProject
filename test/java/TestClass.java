@@ -16,8 +16,8 @@ import static org.junit.Assert.*;
 public class TestClass
 {
     String localPath = new File("").getAbsolutePath() + "\\test\\databases";
-    Symbol testSymbool = new Symbol("SymbolenVerzamelBestand", "Folder1", "Symbool1");
-    Symbol testSymbool3d = new Symbol("Test", "Tekst\\Kast\\Relais", "ConnectionsWrong");
+    Symbol testSymbool = new Symbol("SymbolenVerzamelBestand.ses", "Folder1", "Symbool1");
+    Symbol testSymbool3d = new Symbol("Test", "Tekst\\Kast\\Relais", "SEEable");
     ArrayList<Folder> testFolders = new ArrayList<>(Arrays.asList(
             new Folder("Tekst", "Tekst", 1),
             new Folder("Kast", "Tekst\\Kast", 2),
@@ -44,7 +44,7 @@ public class TestClass
     public void getSymbolsTest2d(){
         GetSymbols2d getSymbols2d = new GetSymbols2d(localPath);
 
-        ArrayList<Symbol> symbols = getSymbols2d.getSymbols("SymbolenVerzamelBestand", localPath + "\\SymbolenVerzamelBestand.ses", GetFolderSES.getFolderSES(localPath + "\\SymbolenVerzamelBestand.ses"));
+        ArrayList<Symbol> symbols = getSymbols2d.getSymbols(localPath + "\\SymbolenVerzamelBestand.ses", GetFolderSES.getFolderSES(localPath + "\\SymbolenVerzamelBestand.ses"));
 
         assertEquals(1, symbols.size());
         assertEquals(symbols.get(0).getFileSES(), testSymbool.getFileSES());
@@ -59,9 +59,8 @@ public class TestClass
 
         ArrayList<Folder> folders = GetFolderSES.getFolderSES(localPath + "\\Test.ses3d");
 
-        ArrayList<Symbol> symbols = getSymbols3d.getSymbols("Test.ses3d", localPath + "\\Test.ses3d", folders);
+        ArrayList<Symbol> symbols = getSymbols3d.getSymbols(localPath + "\\Test.ses3d", folders);
 
-        assertEquals(symbols.get(4).getSymbolName(), testSymbool3d.getSymbolName());
-        assertEquals(symbols.get(4).getFolderName(), testSymbool3d.getFolderName());
+        assertEquals(symbols.get(1).getSymbolName(), testSymbool3d.getSymbolName());
     }
 }

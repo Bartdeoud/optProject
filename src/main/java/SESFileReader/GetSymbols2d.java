@@ -32,17 +32,15 @@ public class GetSymbols2d extends SESFileReader
     }
 
     @Override
-    public ArrayList<Symbol> getSymbols(String fileSES, String location, ArrayList<Folder> folders)
+    public ArrayList<Symbol> getSymbols(String location, ArrayList<Folder> folders)
     {
         ArrayList<Symbol> symbols = new ArrayList<>();
         try
         {
-            Connection connection = DriverManager.getConnection("jdbc:ucanaccess://" + location);
-            Statement statement = connection.createStatement();
             //foreach folder get symbols
             for (Folder folder : folders)
             {
-                symbols.addAll(getDataFromResultSet(statement, folder, fileSES));
+                symbols.addAll(getDataFromResultSet(location, folder));
             }
         } catch (SQLException e)
         {
@@ -51,7 +49,8 @@ public class GetSymbols2d extends SESFileReader
         return validate(symbols);
     }
 
-    public ArrayList<Symbol> getDataFromResultSet(Statement statement, Folder folder, String fileSES) throws SQLException{
+    public ArrayList<Symbol> getDataFromResultSet(String location, Folder folder) throws SQLException{
+        Statement statement = DriverManager.getConnection("jdbc:ucanaccess://" + location).createStatement();
         String query = "SELECT * FROM [Group]";
         ResultSet rs = statement.executeQuery(query);
         ArrayList<Symbol> symbols = new ArrayList<>();
@@ -61,7 +60,7 @@ public class GetSymbols2d extends SESFileReader
             if (folder.getFolderNumber() == rs.getInt("FolderCounter"))
             {
                 String symbolName = rs.getString("GroupName");
-                symbols.add(new Symbol(fileSES, folder.getFolderName(), symbolName));
+                symbols.add(new Symbol(location.substring(location.lastIndexOf("\\") + 1), folder.getFolderName(), symbolName));
             }
         }
         return symbols;

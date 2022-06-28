@@ -48,7 +48,7 @@ public class GenerateExcel
         for(File file: sesFileReader.getFiles()){
             String fileName = file.getName();
             ArrayList<Folder> folders = GetFolderSES.getFolderSES(path + "/" + fileName);
-            returnSymbols.addAll(sesFileReader.getSymbols(fileName, path + "/" + fileName, folders));
+            returnSymbols.addAll(sesFileReader.getSymbols(path + "\\" + fileName, folders));
             System.out.println(fileName);
         }
         return returnSymbols;
@@ -65,8 +65,8 @@ public class GenerateExcel
         XSSFSheet spreadsheet1 = workbook.createSheet("SEEable 3D Symbols");
 
         // writing the data into the sheets
-        spreadsheet = getSheet(symbols, spreadsheet,4);
-        spreadsheet1 = getSheet(symbols3d, spreadsheet1, 6);
+        spreadsheet = getSheet(symbols, spreadsheet);
+        spreadsheet1 = getSheet(symbols3d, spreadsheet1);
 
         createFile(workbook);
     }
@@ -86,14 +86,14 @@ public class GenerateExcel
         }
     }
 
-    private XSSFSheet getSheet(ArrayList<Symbol> symbols, XSSFSheet spreadsheet, int trimLength){
+    private XSSFSheet getSheet(ArrayList<Symbol> symbols, XSSFSheet spreadsheet){
         Row row;
         for (int i = 0; i < symbols.size(); i++)
         {
             row = spreadsheet.createRow(i);
             Cell cell = row.createCell(0);
             Symbol symbol = symbols.get(i);
-            String  fullSymbolPath = String.format("%s\\%s\\%s", symbol.getFileSES().substring(0, symbol.getFileSES().length() - trimLength), symbol.getFolderName(), symbol.getSymbolName());
+            String  fullSymbolPath = String.format("%s\\%s\\%s", symbol.getFileSES().substring(0, symbol.getFileSES().lastIndexOf(".")), symbol.getFolderName(), symbol.getSymbolName());
             cell.setCellValue(fullSymbolPath);
         }
         return spreadsheet;
